@@ -1,0 +1,149 @@
+:root {
+  --red: #a5273e;
+  --red-dark: #7c1c2f;
+  --bg: #fbf5f3;
+  --card: #ffffff;
+  --text: #2a1f21;
+  --muted: #7a6b6d;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.container {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+h1 {
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  color: var(--muted);
+  margin-top: 0;
+  margin-bottom: 28px;
+}
+
+.upload-form {
+  display: flex;
+  gap: 10px;
+  background: var(--card);
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.upload-form input[type="file"] {
+  flex: 1;
+  font-size: 14px;
+}
+
+.upload-form button {
+  background: var(--red);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.upload-form button:hover {
+  background: var(--red-dark);
+}
+
+.alert {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: #fdecea;
+  border: 1px solid #f5b5ae;
+  border-radius: 8px;
+  color: #9c2a20;
+  font-size: 14px;
+}
+
+.result-card {
+  margin-top: 28px;
+  background: var(--card);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.preview {
+  width: 100%;
+  max-height: 320px;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.predictions {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.predictions li {
+  padding: 10px 0;
+  border-bottom: 1px solid #f1e6e6;
+}
+
+.predictions li:last-child {
+  border-bottom: none;
+}
+
+.pred-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.label {
+  font-weight: 600;
+}
+
+.confidence {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.bar-track {
+  background: #f1e2e0;
+  border-radius: 6px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  background: var(--red);
+  height: 100%;
+  border-radius: 6px;
+}
+
+.note {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.disclaimer {
+  margin-top: 32px;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+}

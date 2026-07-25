@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pomegranate Disease Prediction</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>🍎 Pomegranate Disease Prediction</h1>
+    <p class="subtitle">Upload a leaf or fruit photo to check for common pomegranate diseases.</p>
+
+    <form method="POST" enctype="multipart/form-data" class="upload-form">
+      <input type="file" name="image" accept="image/*" required>
+      <button type="submit">Diagnose</button>
+    </form>
+
+    {% if error %}
+      <div class="alert">{{ error }}</div>
+    {% endif %}
+
+    {% if image_url %}
+      <div class="result-card">
+        <img src="/{{ image_url }}" alt="Uploaded pomegranate photo" class="preview">
+
+        {% if predictions %}
+          <h2>Results</h2>
+          <ul class="predictions">
+            {% for label, confidence, note in predictions %}
+              <li>
+                <div class="pred-row">
+                  <span class="label">{{ label.replace('_', ' ') }}</span>
+                  <span class="confidence">{{ (confidence * 100) | round(1) }}%</span>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-fill" style="width: {{ (confidence * 100) | round(1) }}%"></div>
+                </div>
+                {% if note %}
+                  <p class="note">{{ note }}</p>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <p class="disclaimer">
+      Educational demo — not a substitute for advice from a certified agronomist.
+    </p>
+  </div>
+</body>
+</html>
