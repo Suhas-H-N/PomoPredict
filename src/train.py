@@ -1,6 +1,11 @@
 """
 Train the pomegranate disease classifier.
 
+Every run is saved as its own version under models/<version_id>/ and
+registered in models/registry.json, so old models are never overwritten and
+you can switch which one the app serves (see model_registry.py / app.py's
+/admin/models page).
+
 Usage:
     python src/train.py --data_dir data/sample_dataset --epochs 15 --model_type cnn
 """
@@ -8,6 +13,7 @@ Usage:
 import argparse
 import json
 import os
+from datetime import datetime
 
 import matplotlib
 matplotlib.use("Agg")  # headless-safe backend
@@ -15,6 +21,7 @@ import matplotlib.pyplot as plt
 
 from data_loader import load_datasets
 from model import IMG_SIZE, build_cnn, build_transfer_model, compile_model
+from model_registry import register_version, version_dir
 
 MODELS_DIR = os.path.join(os.path.dirname(__file__), "..", "models")
 
@@ -29,6 +36,8 @@ def parse_args():
     parser.add_argument("--model_type", choices=["cnn", "transfer"], default="cnn",
                          help="'cnn' = fast from-scratch model, "
                               "'transfer' = MobileNetV2 backbone (higher accuracy)")
+    parser.add_argument("--no_activate", action="store_true",
+                         help="Train and save this version WITHOUT making it the active model")
     return parser.parse_args()
 
 
@@ -87,19 +96,44 @@ def main():
         callbacks=callbacks,
     )
 
-    model_path = os.path.join(MODELS_DIR, "pomegranate_disease_model.h5")
+    val_loss, val_acc = model.evaluate(val_ds)
+    print(f"\nFinal validation accuracy: {val_acc:.4f} | loss: {val_loss:.4f}")
+
+    # --- Save this run as its own versioned folder --------------------------
+    version_id = f"{args.model_type}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    out_dir = version_dir(version_id)
+    os.makedirs(out_dir, exist_ok=True)
+
+    model_path = os.path.join(out_dir, "model.h5")
     model.save(model_path)
     print(f"Saved trained model to {model_path}")
 
-    class_names_path = os.path.join(MODELS_DIR, "class_names.json")
+    class_names_path = os.path.join(out_dir, "class_names.json")
     with open(class_names_path, "w") as f:
         json.dump(class_names, f, indent=2)
-    print(f"Saved class names to {class_names_path}")
 
-    plot_history(history, os.path.join(MODELS_DIR, "training_history.png"))
+    metrics = {
+        "val_accuracy": float(val_acc),
+        "val_loss": float(val_loss),
+        "epochs_trained": len(history.history["loss"]),
+        "trained_at": datetime.now().isoformat(timespec="seconds"),
+    }
+    with open(os.path.join(out_dir, "metrics.json"), "w") as f:
+        json.dump(metrics, f, indent=2)
 
-    val_loss, val_acc = model.evaluate(val_ds)
-    print(f"\nFinal validation accuracy: {val_acc:.4f} | loss: {val_loss:.4f}")
+    plot_history(history, os.path.join(out_dir, "training_history.png"))
+
+    register_version(
+        version_id,
+        model_type=args.model_type,
+        val_accuracy=float(val_acc),
+        val_loss=float(val_loss),
+        num_classes=len(class_names),
+        set_active=not args.no_activate,
+    )
+    print(f"\nRegistered model version '{version_id}'"
+          f"{' and set as active' if not args.no_activate else ''}.")
+    print("Manage versions any time in the app under /admin/models.")
 
 
 if __name__ == "__main__":
