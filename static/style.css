@@ -1,0 +1,378 @@
+:root {
+  --red: #a5273e;
+  --red-dark: #7c1c2f;
+  --bg: #fbf5f3;
+  --card: #ffffff;
+  --text: #2a1f21;
+  --muted: #7a6b6d;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.container {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+h1 {
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  color: var(--muted);
+  margin-top: 0;
+  margin-bottom: 28px;
+}
+
+.upload-form {
+  display: flex;
+  gap: 10px;
+  background: var(--card);
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.upload-form input[type="file"] {
+  flex: 1;
+  font-size: 14px;
+}
+
+.upload-form button {
+  background: var(--red);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.upload-form button:hover {
+  background: var(--red-dark);
+}
+
+.alert {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: #fdecea;
+  border: 1px solid #f5b5ae;
+  border-radius: 8px;
+  color: #9c2a20;
+  font-size: 14px;
+}
+
+.result-card {
+  margin-top: 28px;
+  background: var(--card);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.preview {
+  width: 100%;
+  max-height: 320px;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.predictions {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.predictions li {
+  padding: 10px 0;
+  border-bottom: 1px solid #f1e6e6;
+}
+
+.predictions li:last-child {
+  border-bottom: none;
+}
+
+.pred-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.label {
+  font-weight: 600;
+}
+
+.confidence {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.bar-track {
+  background: #f1e2e0;
+  border-radius: 6px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  background: var(--red);
+  height: 100%;
+  border-radius: 6px;
+}
+
+.note {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.disclaimer {
+  margin-top: 32px;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ------------------------------------------------------------------ nav */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 24px;
+  background: var(--card);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.nav-brand {
+  font-weight: 700;
+  color: var(--red);
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 14px;
+}
+
+.nav-links a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  color: var(--red);
+}
+
+.nav-user {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* -------------------------------------------------------------- hints */
+.hint {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 10px;
+}
+
+.hint a, .disclaimer a {
+  color: var(--red);
+}
+
+.warn {
+  font-size: 13px;
+  color: #9c6b20;
+  background: #fff6e5;
+  border: 1px solid #f0d9a6;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+/* ------------------------------------------------------------- pills */
+.confidence-pill {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  background: #f1e2e0;
+  color: var(--red-dark);
+  padding: 2px 10px;
+  border-radius: 999px;
+  vertical-align: middle;
+  margin-left: 6px;
+}
+
+/* ---------------------------------------------------------- severity */
+.severity {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 8px 0;
+}
+
+.severity-mild { color: #4a8f3c; }
+.severity-moderate { color: #b8860b; }
+.severity-severe { color: var(--red-dark); }
+
+.treatment {
+  font-size: 13px;
+  background: #fbf5f3;
+  border-left: 3px solid var(--red);
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin: 10px 0;
+}
+
+/* ------------------------------------------------------------ gradcam */
+.gradcam-toggle {
+  margin: 10px 0;
+  font-size: 13px;
+}
+
+.gradcam-toggle summary {
+  cursor: pointer;
+  color: var(--red);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------- result actions */
+.result-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #f1e6e6;
+}
+
+.btn-link {
+  color: var(--red);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+}
+
+.correct-form {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.correct-form select {
+  font-size: 13px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.correct-form button, .result-actions button, .upload-form ~ button {
+  background: var(--card);
+  border: 1px solid var(--red);
+  color: var(--red);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.correct-form button:hover {
+  background: var(--red);
+  color: white;
+}
+
+/* -------------------------------------------------------------- forms */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--card);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  max-width: 320px;
+}
+
+.auth-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.auth-form input {
+  font-size: 14px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.auth-form button {
+  background: var(--red);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.auth-form button:hover {
+  background: var(--red-dark);
+}
+
+/* ------------------------------------------------------------- history */
+.history-map {
+  height: 280px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.history-row {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.history-row .thumb {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.history-details h3 {
+  margin: 0 0 4px;
+  font-size: 16px;
+}
+
+/* ---------------------------------------------------------- admin form */
+#admin-form, .result-card form {
+  margin-top: 10px;
+}
