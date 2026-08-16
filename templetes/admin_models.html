@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Model versions — PomoPredict</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  {% include "_nav.html" %}
+  <div class="container">
+    <h1>Model versions</h1>
+    <p class="subtitle">Every training run is kept. Pick which one the app actually serves.</p>
+
+    {% if not versions %}
+      <p class="hint">No trained model versions yet. Run <code>python src/train.py</code> first.</p>
+    {% endif %}
+
+    {% for version_id, meta in versions.items() %}
+      <div class="result-card">
+        <h3>{{ version_id }}
+          {% if version_id == active %}<span class="confidence-pill">active</span>{% endif %}
+        </h3>
+        <p class="note">
+          {{ meta.model_type }} · {{ meta.num_classes }} classes ·
+          val accuracy {{ (meta.val_accuracy * 100) | round(1) }}% ·
+          val loss {{ meta.val_loss | round(3) }}
+        </p>
+        {% if version_id != active %}
+          <form method="POST">
+            <input type="hidden" name="version_id" value="{{ version_id }}">
+            <button type="submit">Make active</button>
+          </form>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</body>
+</html>
