@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>History — PomoPredict</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  {% if geotagged %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  {% endif %}
+</head>
+<body>
+  {% include "_nav.html" %}
+  <div class="container">
+    <h1>Your history</h1>
+    <p class="subtitle">{{ predictions|length }} saved prediction{{ '' if predictions|length == 1 else 's' }}.</p>
+
+    {% if geotagged %}
+      <div id="map" class="history-map"></div>
+    {% endif %}
+
+    {% if not predictions %}
+      <p class="hint">No predictions yet — go <a href="{{ url_for('index') }}">diagnose a photo</a>.</p>
+    {% endif %}
+
+    {% for p in predictions %}
+      <div class="result-card history-row">
+        <img src="/{{ p.image_path.replace('\\', '/') }}" alt="" class="thumb">
+        <div class="history-details">
+          <h3>{{ p.top_label.replace('_', ' ') }}
+            <span class="confidence-pill">{{ (p.top_confidence * 100) | round(1) }}%</span>
+          </h3>
+          <p class="note">{{ p.created_at }}{% if p.severity %} · {{ p.severity }}{% endif %}
+            {% if p.model_version %} · model {{ p.model_version }}{% endif %}</p>
+          {% if p.corrected_label %}
+            <p class="note">Corrected to: <strong>{{ p.corrected_label.replace('_', ' ') }}</strong></p>
+          {% endif %}
+          <a href="{{ url_for('report', prediction_id=p.id) }}" class="btn-link">Download PDF</a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if geotagged %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script>
+      const points = {{ geotagged | map(attribute='lat') | list | tojson }}
+        .map((lat, i) => [lat, {{ geotagged | map(attribute='lon') | list | tojson }}[i]]);
+      const labels = {{ geotagged | map(attribute='top_label') | list | tojson }};
+
+      const map = L.map('map').setView(points[0], 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 18,
+      }).addTo(map);
+
+      points.forEach((pt, i) => {
+        L.marker(pt).addTo(map).bindPopup(labels[i].replace(/_/g, ' '));
+      });
+
+      if (points.length > 1) {
+        map.fitBounds(points, { padding: [30, 30] });
+      }
+    </script>
+  {% endif %}
+</body>
+</html>
