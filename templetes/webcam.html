@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Webcam Diagnose — PomoPredict</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  {% include "_nav.html" %}
+  <div class="container">
+    <h1>📷 Webcam Diagnose</h1>
+    <p class="subtitle">Point your camera at a pomegranate leaf or fruit and capture a frame.</p>
+
+    <div class="result-card">
+      <video id="video" autoplay playsinline class="preview"></video>
+      <canvas id="canvas" style="display:none;"></canvas>
+      <div class="result-actions">
+        <button id="capture-btn" type="button">Capture &amp; Diagnose</button>
+      </div>
+      <div id="status" class="hint"></div>
+    </div>
+
+    <div id="result-container"></div>
+
+    <p class="disclaimer">
+      Educational demo — not a substitute for advice from a certified agronomist.
+    </p>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
