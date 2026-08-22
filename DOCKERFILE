@@ -1,0 +1,22 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# System deps for Pillow/TensorFlow image handling
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libglib2.0-0 libgl1 \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt gunicorn
+
+COPY . .
+
+RUN mkdir -p data models static/uploads
+
+ENV FLASK_DEBUG=0
+EXPOSE 5000
+
+# 1 worker: the Keras model is loaded lazily into a module-level global that
+# isn't fork-safe to share across workers without extra plumbing.
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "1", "--timeout", "120", "app:app"]
